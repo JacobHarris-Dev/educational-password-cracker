@@ -2,47 +2,99 @@ package com.passwordcracker;
 
 public class BruteForceAttack {
 
-    //private static final char[] charset = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@#?".toCharArray();
+    // Work way from top to bottom during brute force
+    private static final char[] charset0 = "1234567890".toCharArray(); // numbers
+    private static final char[] charset1 = "1234567890!?@#".toCharArray(); // numbers + special characters
+    private static final char[] charset2 = "abcdefghijklmnopqrstuvxyz".toCharArray(); // letters - lowercase
+    private static final char[] charset3 = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray(); // lowercase + numbers
+    private static final char[] charset4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray(); // uppercase + numbers
+    private static final char[] charset5 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray(); // letters - lowercase/uppercase
+    private static final char[] charset6 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray(); // letters + numebrs
+    private static final char[] charset7 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!?@#"
+            .toCharArray(); // letters + numbers + !?@_#
 
-    public static long attack(int length, String target, String hashType, char[] charset) {
+    // Array to be traversed through during brute force attack
+    private static char[][] passBank = { charset0, charset1, charset2, charset3, charset4, charset5, charset6, charset7 };
+
+    public static long attack(int length, String target, String hashType) {
         String guess;
         String hashedGuess;
-        
-        long startTime = System.nanoTime(); // Start timer 
+        int attempts = 0;
 
-        for (char c1 : charset) {
-            for (char c2 : charset) {
-                for (char c3 : charset) {
-                    for (char c4 : charset) {
-                        for (char c5 : charset) {
+        long startTime = System.nanoTime(); // Start timer
 
-                            guess = "" + c1 + c2 + c3 + c4 + c5;
-                            hashedGuess = Hasher.hashPassword(guess);
+        for (int i = 0; i < passBank.length; i++) {
+            attempts = 0; // reset attempts  
+            // Formula to figure out how many unique passwords there are in bank
+           long totalCombinations = (long) Math.pow(passBank[i].length, length);
 
-                            if (hashedGuess.equals(target)) {
-                                
-                                long endTime = System.nanoTime(); // End timer
-                                long duration = endTime - startTime;
+            System.out.println("searching password bank " + i + " with " + passBank[i].length + " characters");
+            System.out.println("Total combonations: " + totalCombinations);
 
-                                System.out.println("Password Found: " + guess);
-                                System.out.println("Duration: " + duration /  1_000_000_000.0 + " seconds");
-                                return duration;
+            for (char c1 : passBank[i]) {
+                for (char c2 : passBank[i]) {
+                    for (char c3 : passBank[i]) {
+                        for (char c4 : passBank[i]) {
+                            for (char c5 : passBank[i]) {
 
-                            } else {
-                                System.out.println(guess + ": failed");
+                                guess = "" + c1 + c2 + c3 + c4 + c5;
 
-                            } 
-                        
+                                // transformPassword (guess)
+                                hashedGuess = Hasher.hashPassword(guess);
+
+                                if (hashedGuess.equals(target)) {
+
+                                    long endTime = System.nanoTime(); // Takes a snapshot of current run time
+                                    long duration = endTime - startTime;
+
+                                    System.out.println("Password Found: " + guess);
+                                    System.out.println("Duration: " + duration / 1_000_000_000.0 + " seconds");
+                                    return duration;
+
+                                } else {
+                                    attempts++;
+                                    if (attempts % 100_000 == 0) {
+                                        long now = System.nanoTime();
+                                        double elapsed = (now - startTime) / 1_000_000_00;
+                                        double guessesPerSecond = attempts / elapsed;
+                                        long remaining = totalCombinations - attempts;
+                                        double estRemaining = remaining / guessesPerSecond;
+
+                                        System.out.printf("Bank " + i + "Progress: %.2f%% (%d/%d), Est. time left: %.1fs\n",
+                                                (100.0 * attempts) / totalCombinations,
+                                                attempts, totalCombinations,
+                                                estRemaining);
+
+                                    }
+
+                                }
+
+                            }
                         }
                     }
                 }
             }
-        }
 
+            System.out.println("No matches found in password bank " + i);
+            System.out.println(" ------------ ");
+        } // end of for loop
 
         return 0;
 
+    }
 
+    private static void getHashType() {
+
+    }
+
+    /**
+     * Determs how to hash password based off hash type, then
+     * returns correctly hashed password
+     */
+    private static String transformPassword(String hashType) {
+        String transPass = "";
+
+        return transPass;
     }
 
 }

@@ -36,6 +36,7 @@ public class PasswordCracker {
 
             hashChoice = scan.nextLine();
 
+            // Switch statement matches user input with list of options 
             switch (hashChoice) {
                 case "1":
                     hashedPass = Hasher.hashPassword(choice);
@@ -92,7 +93,9 @@ public class PasswordCracker {
 
                 // Call bruteForceAttack class and begin cracking 
                 System.out.println("Attacking... ");
-                BruteForceAttack.attack(5, hashedPass, "Basic", charset3); // Edit charset to change selection
+
+
+                BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice); // Edit charset to change selection
 
             } else if (attackChoice.equals("2")) {
                 System.out.print("\n--- Dictionary Attack ---\nEnter password to crack: ");
