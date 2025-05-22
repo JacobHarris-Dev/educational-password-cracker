@@ -25,7 +25,6 @@ public class Hasher {
     public static String hashPassword(String password) {
         String hashedPassword = "";
 
-      
         try {
              // Use message Digest to hash code. Can use different hashing methods. Works with 
              // MD2, MD5, SHA-1, SHA-224, SHA-256, SHA-384, and SHA 512.
@@ -48,7 +47,6 @@ public class Hasher {
 
         return hashedPassword;
     }
-
 
     /**
      * Adds random string to password before it is hashed,
