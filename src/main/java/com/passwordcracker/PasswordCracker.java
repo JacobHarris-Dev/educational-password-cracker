@@ -13,16 +13,10 @@ public class PasswordCracker {
     private static String hashChoice;
     private static boolean run;
     private static String hashedPass;
-    private static final char[] charset0 = "1234567890".toCharArray(); // numbers
-    private static final char[] charset1 = "abcdefghijklmnopqrstuvxyz".toCharArray(); // letters - lowercase
-    private static final char[] charset2 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray(); // letters - lowercase/uppercase
-    private static final char[] charset3 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray(); // letters + numbers
-    private static final char[] charset4 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!?@#_".toCharArray(); // letters + numbers + !?@_#
-
+   
     public static String promptHash(String choice) {
 
         Scanner scan = new Scanner(System.in);
-        String hashChoice;
         String hashedPass = "";
 
         while (true) {
@@ -94,7 +88,7 @@ public class PasswordCracker {
                 // Call bruteForceAttack class and begin cracking 
                 System.out.println("Attacking... ");
 
-
+                System.out.println("------Hash Choice: " + hashChoice);
                 BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice); // Edit charset to change selection
 
             } else if (attackChoice.equals("2")) {
@@ -111,11 +105,16 @@ public class PasswordCracker {
 
             } else if (attackChoice.equals("exit")) {
                 System.out.println("\nExiting...");
+               
                 break;
             } else {
                 System.out.println("Option not recognized, try again.");
             }
         }
 
+        scan.close();
+
     }
+
+    
 }

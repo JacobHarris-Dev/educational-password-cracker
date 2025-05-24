@@ -13,7 +13,7 @@ import java.math.*;
 public class Hasher {
 
     private static final String secretPepper = "dn38ws?k210dmsa!";
-    private static String uniqueSalt;
+    private static String uniqueSalt = generateSalt();
 
     /**
      * Turns password into encoded String uses Message Digest that cannot be converted 
@@ -61,7 +61,7 @@ public class Hasher {
         String saltedHashedPass = "";
 
         // Adds salt to end of password before it is hashed 
-        saltedPassword = password += generateSalt();
+        saltedPassword = password += uniqueSalt;
 
         // Hashes password 
         saltedHashedPass = hashPassword(saltedPassword); 
@@ -94,7 +94,7 @@ public class Hasher {
         String saltedPepperedHashPass = "";
 
         // Adds salt and pepper to password 
-        saltedPepperedPass = secretPepper + password + generateSalt();
+        saltedPepperedPass = secretPepper + password + uniqueSalt;
 
         // Hashes salted and peppered password 
         saltedPepperedHashPass = hashPassword(saltedPepperedPass);
@@ -108,7 +108,7 @@ public class Hasher {
      * 
      * @return generatedSalt
      */
-    private static String generateSalt() {
+    public static String generateSalt() {
         String generatedSalt;
         
 
@@ -124,7 +124,10 @@ public class Hasher {
         // Saves salt to variable with wider scope
         uniqueSalt = generatedSalt;
 
+        System.out.println("Your unique salt: " + uniqueSalt);
+
         return generatedSalt;
     }
+
 
 }

@@ -16,16 +16,19 @@ public class BruteForceAttack {
     private static final char[] charset7 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!?@#"
             .toCharArray(); // letters + numbers + !?@_#
 
+    // Array to be traversed through during brute force attack
+    private static char[][] passBank = { charset0, charset1, charset2, charset3, charset4, charset5, charset6,
+            charset7 };
+
     private static int attempts;
     private static long startTime;
     private static String targetPass;
     private static long totalCombinations;
     private static int bankNumber;
+    private static boolean found;
+    private static String hash;
 
-    // Array to be traversed through during brute force attack
-    private static char[][] passBank = { charset0, charset1, charset2, charset3, charset4, charset5, charset6,
-            charset7 };
-
+    
 
     /**
      * Main attack method
@@ -38,11 +41,13 @@ public class BruteForceAttack {
     public static long attack(int length, String target, String hashType) {
         attempts = 0;
         targetPass = target;
+        found = false;
+        hash = hashType; // Saves to wider scope variabe
 
         startTime = System.nanoTime(); // Start timer
 
         // Begins recursion to crack password
-        for (int i = 0; i < passBank.length; i++) {
+        for (int i = 0; i < passBank.length && !found; i++) {
             bankNumber = i;
 
             attempts = 0;
@@ -52,92 +57,45 @@ public class BruteForceAttack {
             System.out.println("searching password bank " + i + " with " + passBank[i].length + " characters");
             System.out.println("Total combonations: " + totalCombinations);
             recursiveAttack(passBank[i], 0, length, new StringBuilder());
-            System.out.println("No matches found in password bank " + i);
-            System.out.println(" ------------ ");
+            if (!found) {
+                System.out.println("No matches found in password bank " + i);
+                System.out.println(" ------------ ");
+            }
         }
 
-        /**
-         * for (int i = 0; i < passBank.length; i++) {
-         * attempts = 0; // reset attempts
-         * // Formula to figure out how many unique passwords there are in bank
-         * long totalCombinations = (long) Math.pow(passBank[i].length, length);
-         * 
-         * System.out.println("searching password bank " + i + " with " +
-         * passBank[i].length + " characters");
-         * System.out.println("Total combonations: " + totalCombinations);
-         * 
-         * for (char c1 : passBank[i]) {
-         * for (char c2 : passBank[i]) {
-         * for (char c3 : passBank[i]) {
-         * for (char c4 : passBank[i]) {
-         * for (char c5 : passBank[i]) {
-         * 
-         * guess = "" + c1 + c2 + c3 + c4 + c5;
-         * 
-         * // transformPassword (guess)
-         * hashedGuess = Hasher.hashPassword(guess);
-         * 
-         * if (hashedGuess.equals(target)) {
-         * 
-         * long endTime = System.nanoTime(); // Takes a snapshot of current run time
-         * long duration = endTime - startTime;
-         * 
-         * System.out.println("Password Found: " + guess);
-         * System.out.println("Duration: " + duration / 1_000_000_000.0 + " seconds");
-         * return duration;
-         * 
-         * } else {
-         * attempts++;
-         * if (attempts % 100_000 == 0) {
-         * long now = System.nanoTime();
-         * double elapsed = (now - startTime) / 1_000_000_00;
-         * double guessesPerSecond = attempts / elapsed;
-         * long remaining = totalCombinations - attempts;
-         * double estRemaining = remaining / guessesPerSecond;
-         * 
-         * System.out.printf("Bank " + i + "Progress: %.2f%% (%d/%d), Est. time left:
-         * %.1fs\n",
-         * (100.0 * attempts) / totalCombinations,
-         * attempts, totalCombinations,
-         * estRemaining);
-         * 
-         * }
-         * 
-         * }
-         * 
-         * }
-         * }
-         * }
-         * }
-         * }
-         * 
-         * System.out.println("No matches found in password bank " + i);
-         * System.out.println(" ------------ ");
-         * } // end of for loop
-         * 
-         */
-
+      
         return 0;
 
     }
 
+    /**
+     * Method for recursive password generation
+     * 
+     * @param charset
+     * @param depth
+     * @param desiredLength
+     * @param currentGuess
+     */
     private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess) {
+        if (found) {
+            return;
+        }
+
         if (depth == desiredLength) {
             String guess = currentGuess.toString();
-            String hashed = Hasher.hashPassword(guess);
+            String hashed = hashGuess(guess);
             attempts++;
 
             if (hashed.equals(targetPass)) {
+                long endTime = System.nanoTime();
+
                 System.out.println("Password found: " + guess);
-                System.exit(0);
+                //System.exit(0);
+                found = true;
+                System.out.println("Time taken: " + (endTime - startTime) / 1_000_000_000.0  + " seconds");
+                return;
             } else {
                 if (attempts % 100_000_0 == 0) {
-                    long now = System.nanoTime();
-                    //double elapsed = (now - startTime) / 1_000_000_00;
-                  //double guessesPerSecond = attempts / elapsed;
-                    long remaining = totalCombinations - attempts;
-                    //double estRemaining = remaining / guessesPerSecond;
-
                     System.out.printf("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)\n",
                             (100.0 * attempts) / totalCombinations,
                             attempts, totalCombinations);
@@ -160,8 +118,18 @@ public class BruteForceAttack {
      * Determs how to hash password based off hash type, then
      * returns correctly hashed password
      */
-    private static String transformPassword(String hashType) {
+    private static String hashGuess(String guess) {
         String transPass = "";
+
+        if (hash.equals("1")) {
+            transPass = Hasher.hashPassword(guess);
+        } else if (hash.equals("2")) {
+            transPass = Hasher.saltHashPassword(guess);
+        } else if (hash.equals("3")) {
+            transPass = Hasher.pepperHashPassword(guess);
+        } else if (hash.equals("4")) {
+            transPass = Hasher.saltedPepperHashPass(guess);
+        }
 
         return transPass;
     }
