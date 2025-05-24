@@ -37,6 +37,7 @@ public class PasswordCracker {
                     System.out.println("Generated Basic Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "2":
+                    Hasher.generateSalt();
                     hashedPass = Hasher.saltHashPassword(choice);
                     System.out.println("Generated Salted Hashed Password: " + hashedPass);
                     return hashedPass;
@@ -45,6 +46,7 @@ public class PasswordCracker {
                     System.out.println("Generated Peppered Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "4":
+                    Hasher.generateSalt();
                     hashedPass = Hasher.saltedPepperHashPass(choice);
                     System.out.println("Generated Salt N Peppa Hashed Password: " + hashedPass);
                     return hashedPass;
@@ -88,7 +90,7 @@ public class PasswordCracker {
                 // Call bruteForceAttack class and begin cracking 
                 System.out.println("Attacking... ");
 
-                System.out.println("------Hash Choice: " + hashChoice);
+                //System.out.println("------Hash Choice: " + hashChoice);
                 BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice); // Edit charset to change selection
 
             } else if (attackChoice.equals("2")) {

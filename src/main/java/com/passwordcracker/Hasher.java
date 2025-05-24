@@ -13,10 +13,24 @@ import java.math.*;
 public class Hasher {
 
     private static final String secretPepper = "dn38ws?k210dmsa!";
-    private static String uniqueSalt = generateSalt();
+    private static String uniqueSalt = "";
+    private static final MessageDigest md;
+
+    // Use message Digest to hash code. Can use different hashing methods. Works
+    // with
+    // MD2, MD5, SHA-1, SHA-224, SHA-256, SHA-384, and SHA 512.
+    // Only created once to avoid slowdowns during recursion.
+    static {
+        try {
+            md = MessageDigest.getInstance("MD5"); // swapable, currently using MD5
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("MD5 not available", e);
+        }
+    }
 
     /**
-     * Turns password into encoded String uses Message Digest that cannot be converted 
+     * Turns password into encoded String uses Message Digest that cannot be
+     * converted
      * back into original string to protect password.
      * 
      * @param password
@@ -24,26 +38,23 @@ public class Hasher {
      */
     public static String hashPassword(String password) {
         String hashedPassword = "";
+        byte[] messageDigest;
 
-        try {
-             // Use message Digest to hash code. Can use different hashing methods. Works with 
-             // MD2, MD5, SHA-1, SHA-224, SHA-256, SHA-384, and SHA 512.
-            MessageDigest md = MessageDigest.getInstance("MD5"); // Creates Message digest based off MD5
-            
-            // Quickly turns string password into byte array
-            // Hashing functions only operate on raw binary data, so we turn the password to bytes
-            byte[] messageDigest = md.digest(password.getBytes());
-            
-            // Converts hashed byte array into BitInteger, which converts byte array to hex string.
-            // This way, we can display our hashed password in a common format
-            BigInteger bigInt = new BigInteger(1, messageDigest); // 1 means treat this number as unisgned 
-            
-            // Converts hexadecimal into string representation 
-            hashedPassword = bigInt.toString(16); //16 means base 16 string
-        
-        } catch (NoSuchAlgorithmException e) {
-            hashedPassword = "Error hashing password. " + e.getMessage();
+        // Quickly turns string password into byte array
+        // Hashing functions only operate on raw binary data, so we turn the password to
+        // bytes
+        synchronized (md) { // Use synchronizing to avoid method being called at same time
+            md.reset();
+            messageDigest = md.digest(password.getBytes());
         }
+
+        // Converts hashed byte array into BitInteger, which converts byte array to hex
+        // string.
+        // This way, we can display our hashed password in a common format
+        BigInteger bigInt = new BigInteger(1, messageDigest); // 1 means treat this number as unisgned
+
+        // Converts hexadecimal into string representation
+        hashedPassword = bigInt.toString(16); // 16 means base 16 string
 
         return hashedPassword;
     }
@@ -60,18 +71,18 @@ public class Hasher {
         String saltedPassword = "";
         String saltedHashedPass = "";
 
-        // Adds salt to end of password before it is hashed 
+        // Adds salt to end of password before it is hashed
         saltedPassword = password += uniqueSalt;
 
-        // Hashes password 
-        saltedHashedPass = hashPassword(saltedPassword); 
+        // Hashes password
+        saltedHashedPass = hashPassword(saltedPassword);
 
         return saltedHashedPass;
     }
 
     /**
-     * Same string added to all passwords, but kept 
-     * hidden. Password is peppered, then hashed. 
+     * Same string added to all passwords, but kept
+     * hidden. Password is peppered, then hashed.
      * 
      * @param password
      * @return saltedPepperedPass
@@ -93,12 +104,12 @@ public class Hasher {
         String saltedPepperedPass = "";
         String saltedPepperedHashPass = "";
 
-        // Adds salt and pepper to password 
+        // Adds salt and pepper to password
         saltedPepperedPass = secretPepper + password + uniqueSalt;
 
-        // Hashes salted and peppered password 
+        // Hashes salted and peppered password
         saltedPepperedHashPass = hashPassword(saltedPepperedPass);
-        
+
         return saltedPepperedHashPass;
     }
 
@@ -110,15 +121,14 @@ public class Hasher {
      */
     public static String generateSalt() {
         String generatedSalt;
-        
 
-        // Byte array with 16 empty Bytes/128 bits 
-        byte[] salt = new byte[16]; 
+        // Byte array with 16 empty Bytes/128 bits
+        byte[] salt = new byte[16];
 
         // Fils salt array with random bytes using secure random number generator
-        new SecureRandom().nextBytes(salt); 
+        new SecureRandom().nextBytes(salt);
 
-        // Turns byte array into Base64 text friendly String 
+        // Turns byte array into Base64 text friendly String
         generatedSalt = Base64.getEncoder().encodeToString(salt);
 
         // Saves salt to variable with wider scope
@@ -128,6 +138,5 @@ public class Hasher {
 
         return generatedSalt;
     }
-
 
 }
