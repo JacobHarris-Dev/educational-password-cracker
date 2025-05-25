@@ -16,7 +16,7 @@ public class PasswordCracker {
    
     public static String promptHash(String choice) {
 
-        Scanner scan = new Scanner(System.in);
+        
         String hashedPass = "";
 
         while (true) {
@@ -48,7 +48,7 @@ public class PasswordCracker {
                 case "4":
                     Hasher.generateSalt();
                     hashedPass = Hasher.saltedPepperHashPass(choice);
-                    System.out.println("Generated Salt N Peppa Hashed Password: " + hashedPass);
+                    System.out.println("Generated Salted Peppered Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "exit":
                     System.out.println("Returning to attack selection...");
@@ -77,7 +77,7 @@ public class PasswordCracker {
             attackChoice = scan.nextLine();
 
             if (attackChoice.equals("1")) {
-                System.out.print("\n--- Brute Force ---\nEnter password to crack (5 characters): ");
+                System.out.print("\n--- Brute Force ---\nEnter password to crack (5 characters or less reccomended): ");
                 passToCrack = scan.nextLine();
                 System.out.println("You entered: " + passToCrack);
 
