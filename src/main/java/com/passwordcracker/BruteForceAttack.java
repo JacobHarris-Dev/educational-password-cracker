@@ -46,6 +46,8 @@ public class BruteForceAttack {
 
         startTime = System.nanoTime(); // Start timer
 
+        System.out.println("\nStarting Brute Force Attack");
+
         // Begins recursion to crack password
         for (int i = 0; i < passBank.length && !found; i++) {
             bankNumber = i;
@@ -89,7 +91,7 @@ public class BruteForceAttack {
             if (hashed.equals(targetPass)) {
                 long endTime = System.nanoTime();
 
-                System.out.println("Password found: " + guess);
+                System.out.println("\nPassword found: " + guess);
                 //System.exit(0);
                 found = true;
                 System.out.println("Time taken: " + (endTime - startTime) / 1_000_000_000.0  + " seconds");
@@ -132,6 +134,10 @@ public class BruteForceAttack {
         }
 
         return transPass;
+    }
+
+    public static boolean getFouund() {
+        return found;
     }
 
 }

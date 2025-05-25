@@ -71,6 +71,7 @@ public class PasswordCracker {
         while (run) {
             System.out.println("\nChoose attack type (1, 2, or exit): ");
             System.out.println("1: Brute-Force Attack\n2: Dictionary Attack");
+            System.out.println("3: Dictionary + Brute Force Attack");
             System.out.println("exit: Stop program\n");
             System.out.print("Enter attack type: ");
 
@@ -94,6 +95,7 @@ public class PasswordCracker {
                 BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice); // Edit charset to change selection
 
             } else if (attackChoice.equals("2")) {
+
                 System.out.print("\n--- Dictionary Attack ---\nEnter password to crack: ");
                 passToCrack = scan.nextLine();
                 System.out.println("You entered: " + passToCrack);
@@ -104,7 +106,24 @@ public class PasswordCracker {
                 }
 
                 // Add dictionary attack logic here
+                DictionaryAttack.attack(hashedPass, hashChoice);
 
+            } else if (attackChoice.equals("3")) {
+             System.out.print("\n--- Dictionary+BF Attack ---\nEnter password to crack: ");
+                passToCrack = scan.nextLine();
+                System.out.println("You entered: " + passToCrack);
+
+                hashedPass = promptHash(passToCrack);
+                if (hashedPass == null) {
+                    continue;
+                }
+
+                // Add dictionary attack logic here
+                DictionaryAttack.attack(hashedPass, hashChoice);
+                if (!DictionaryAttack.getFound()) {
+                    BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice);
+                }
+            
             } else if (attackChoice.equals("exit")) {
                 System.out.println("\nExiting...");
                
