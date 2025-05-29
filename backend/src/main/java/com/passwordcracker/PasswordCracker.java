@@ -69,10 +69,11 @@ public class PasswordCracker {
 
         scan = new Scanner(System.in);
         while (run) {
-            System.out.println("\nChoose attack type (1, 2, 3, 4, or exit): ");
+            System.out.println("\nChoose attack type (1, 2, 3, 4, 5, or exit): ");
             System.out.println("1: Brute-Force Attack\n2: Dictionary Attack");
             System.out.println("3: Rainbow Table Attack (Not salt friendly)");
             System.out.println("4: Dictionary + Brute Force Attack");
+            System.out.println("5: Phishing demonstration");
             System.out.println("exit: Stop program\n");
             System.out.print("Enter attack type: ");
 
@@ -138,6 +139,16 @@ public class PasswordCracker {
                     BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice);
                 }
             
+            } else if (attackChoice.equals("5")) {
+                System.out.print("\n--- Phishing Demo ---\nEnter password to crack: ");
+                passToCrack = scan.nextLine();
+                System.out.println("You entered: " + passToCrack);
+                System.out.println("Because we are trying to find pass directly, password will not be hashed.");
+                
+                
+                // Add dictionary attack logic here
+                PhishingAttack.attack(passToCrack);
+
             } else if (attackChoice.equals("exit")) {
                 System.out.println("\nExiting...");
                
