@@ -1,18 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from 'react';
+
 
 export default function App() {
   const [status, setStatus] = useState('Loading...');
 
   useEffect(() => {
-    fetch('http://localhost:8080/status')
-      .then(res => res.text())
-      .then(data => setStatus(data))
-      .catch(err => {
-        console.error(err);
-        setStatus('Error fetching status');
-      });
-  }, []);
+  fetch('http://localhost:8080/api/status')
+    .then(res => res.text())
+    .then(data => setStatus(data))
+    .catch(err => {
+      console.error(err);
+      setStatus('Error fetching status');
+    });
+}, []);
 
   return (
     <div className="App">
