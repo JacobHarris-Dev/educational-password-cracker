@@ -1,7 +1,9 @@
 com\passwordcracker\Hasher.class
 com\passwordcracker\PasswordCracker.class
+com\passwordcracker\PasswordCrackerApp.class
 com\passwordcracker\BruteForceAttack.class
 com\passwordcracker\DictionaryAttack.class
 com\passwordcracker\Utils.class
 com\passwordcracker\RainbowTableAttack.class
+com\passwordcracker\CrackController.class
 com\passwordcracker\PhishingAttack.class
