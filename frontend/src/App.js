@@ -43,12 +43,92 @@ export default function App() {
 }
 
 function BruteForceButton() {
+  const [logs, setLogs] = useState([]);
+  const [isRunning, setIsRunning] = useState(false);
+  const [eventSource, setEventSource] = useState(null);
+  const [hash, setHash] = useState('');
+
+  const startBruteForce = () => {
+    if (!hash) {
+      alert("Please enter a hash to crack.");
+      return;
+    }
+
+    setLogs([]);
+    setIsRunning(true);
+
+    const length = 8;
+    const hashType = 1;
+
+    const source = new EventSource(`http://localhost:8080/api/brute-force?hash=${hash}&length=${length}&hashType=${hashType}`);
+    setEventSource(source);
+
+    source.onmessage = (event) => {
+      setLogs(prevLogs => [...prevLogs, event.data]);
+    };
+
+    source.onerror = (err) => {
+      console.error("SSE error:", err);
+      source.close();
+      setIsRunning(false);
+    };
+
+    source.onopen = () => {
+      console.log("✅ SSE connection opened.");
+    };
+  };
+
+  const stopAttack = () => {
+    if (eventSource) {
+      eventSource.close();
+    }
+    setIsRunning(false);
+    setEventSource(null);
+    setLogs([]);
+    setHash('');
+  };
+
   return (
-    <p>
-      <button>Brute Force</button>
-    </p>
+    <div>
+      <input
+        type="text"
+        placeholder="Enter hash here"
+        value={hash}
+        onChange={(e) => setHash(e.target.value)}
+        disabled={isRunning}
+        style={{ marginBottom: "1em", padding: "0.5em", width: "100%" }}
+      />
+
+      <div style={{ display: "flex", gap: "1em", marginBottom: "1em" }}>
+        <button onClick={startBruteForce} disabled={isRunning}>
+          {isRunning ? "Running..." : "Start Brute Force"}
+        </button>
+
+        <button onClick={stopAttack} disabled={!isRunning}>
+          Stop
+        </button>
+      </div>
+
+      <div
+        className="log-box"
+        style={{
+          textAlign: "left",
+          marginTop: "1em",
+          maxHeight: "200px",
+          overflowY: "auto",
+          border: "1px solid gray",
+          padding: "1em",
+          backgroundColor: "#f9f9f9"
+        }}
+      >
+        {logs.map((log, i) => (
+          <div key={i}>{log}</div>
+        ))}
+      </div>
+    </div>
   );
 }
+
 
 function DictionaryButton() {
   return (

@@ -1,5 +1,7 @@
 package com.passwordcracker;
 
+import java.util.function.Consumer; // Used so code can push live updates to frontend 
+
 public class BruteForceAttack {
 
     // Work way from top to bottom during brute force
@@ -38,11 +40,14 @@ public class BruteForceAttack {
      * @param hashType
      * @return
      */
-    public static long attack(int length, String target, String hashType) {
+    public static long attack(int length, String target, String hashType, Consumer<String> stream) {
         attempts = 0;
         targetPass = target;
         found = false;
         hash = hashType; // Saves to wider scope variabe
+
+        
+        stream.accept("\nStarting Brute Force Attack");
 
         startTime = System.nanoTime(); // Start timer
 
@@ -56,12 +61,17 @@ public class BruteForceAttack {
 
             totalCombinations = (long) Math.pow(passBank[i].length, length);
 
+            stream.accept("Searching password bank " + i + " with " + passBank[i].length + " characters");
+            stream.accept("Total combinations: " + totalCombinations);
+
             System.out.println("searching password bank " + i + " with " + passBank[i].length + " characters");
             System.out.println("Total combonations: " + totalCombinations);
-            recursiveAttack(passBank[i], 0, length, new StringBuilder());
+            recursiveAttack(passBank[i], 0, length, new StringBuilder(), stream);
             if (!found) {
                 System.out.println("No matches found in password bank " + i);
                 System.out.println(" ------------ ");
+                stream.accept("No matches found in password bank " + i);
+                stream.accept("------------");
             }
         }
 
@@ -78,7 +88,7 @@ public class BruteForceAttack {
      * @param desiredLength
      * @param currentGuess
      */
-    private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess) {
+    private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess, Consumer<String> stream) {
         if (found) {
             return;
         }
@@ -95,12 +105,14 @@ public class BruteForceAttack {
                 //System.exit(0);
                 found = true;
                 System.out.println("Time taken: " + (endTime - startTime) / 1_000_000_000.0  + " seconds");
+                stream.accept("\nPassword found: " + guess);
+                stream.accept("Time taken: " + (endTime - startTime) / 1_000_000_000.0 + " seconds");
                 return;
             } else {
-                if (attempts % 100_000_0 == 0) {
-                    System.out.printf("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)\n",
+                if (attempts % 100_000_00 == 0) {
+                     stream.accept(String.format("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)",
                             (100.0 * attempts) / totalCombinations,
-                            attempts, totalCombinations);
+                            attempts, totalCombinations));
                 }
             }
 
@@ -109,7 +121,7 @@ public class BruteForceAttack {
 
         for (char c : charset) {
             currentGuess.append(c);
-            recursiveAttack(charset, depth + 1, desiredLength, currentGuess);
+            recursiveAttack(charset, depth + 1, desiredLength, currentGuess, stream);
             currentGuess.deleteCharAt(currentGuess.length() - 1); // backtrack
         }
 
