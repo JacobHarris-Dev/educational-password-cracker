@@ -30,8 +30,6 @@ public class BruteForceAttack {
     private static boolean found;
     private static String hash;
 
-    
-
     /**
      * Main attack method
      * 
@@ -46,7 +44,6 @@ public class BruteForceAttack {
         found = false;
         hash = hashType; // Saves to wider scope variabe
 
-        
         stream.accept("\nStarting Brute Force Attack");
 
         startTime = System.nanoTime(); // Start timer
@@ -75,7 +72,6 @@ public class BruteForceAttack {
             }
         }
 
-      
         return 0;
 
     }
@@ -88,7 +84,8 @@ public class BruteForceAttack {
      * @param desiredLength
      * @param currentGuess
      */
-    private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess, Consumer<String> stream) {
+    private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess,
+            Consumer<String> stream) {
         if (found) {
             return;
         }
@@ -102,17 +99,28 @@ public class BruteForceAttack {
                 long endTime = System.nanoTime();
 
                 System.out.println("\nPassword found: " + guess);
-                //System.exit(0);
+                // System.exit(0);
                 found = true;
-                System.out.println("Time taken: " + (endTime - startTime) / 1_000_000_000.0  + " seconds");
+                System.out.println("Time taken: " + (endTime - startTime) / 1_000_000_000.0 + " seconds");
                 stream.accept("\nPassword found: " + guess);
                 stream.accept("Time taken: " + (endTime - startTime) / 1_000_000_000.0 + " seconds");
+
+                try {
+                    Thread.sleep(100); // allow time to flush to frontend
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 return;
             } else {
-                if (attempts % 100_000_00 == 0) {
-                     stream.accept(String.format("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)",
+                if (attempts % 100_000_0 == 0) {
+                    stream.accept(String.format("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)",
                             (100.0 * attempts) / totalCombinations,
                             attempts, totalCombinations));
+                    try {
+                        Thread.sleep(10); // Let SSE flush updates
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             }
 
@@ -127,7 +135,6 @@ public class BruteForceAttack {
 
     }
 
-   
     /**
      * Determs how to hash password based off hash type, then
      * returns correctly hashed password
