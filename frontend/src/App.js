@@ -1,7 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function App() {
   const [status, setStatus] = useState('Loading...');
@@ -43,15 +42,20 @@ export default function App() {
 }
 
 function BruteForceButton() {
-  const [logs, setLogs] = useState([]);
+   const [logs, setLogs] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [eventSource, setEventSource] = useState(null);
   const [hash, setHash] = useState('');
+  const eventSourceRef = useRef(null); //  keeps EventSource persistent
 
   const startBruteForce = () => {
     if (!hash) {
       alert("Please enter a hash to crack.");
       return;
+    }
+
+    if (eventSourceRef.current) {
+      console.warn("Brute force already running.");
+      return; // don't start again if already running
     }
 
     setLogs([]);
@@ -61,29 +65,28 @@ function BruteForceButton() {
     const hashType = 1;
 
     const source = new EventSource(`http://localhost:8080/api/brute-force?hash=${hash}&length=${length}&hashType=${hashType}`);
-    setEventSource(source);
-
-    source.onmessage = (event) => {
-      setLogs(prevLogs => [...prevLogs, event.data]);
-    };
-
-    source.onerror = (err) => {
-      console.error("SSE error:", err);
-      source.close();
-      setIsRunning(false);
-    };
+    eventSourceRef.current = source;
 
     source.onopen = () => {
       console.log("✅ SSE connection opened.");
     };
+
+    source.onmessage = (event) => {
+      setLogs(prev => [...prev, event.data]);
+    };
+
+    source.onerror = (err) => {
+      console.error("SSE error:", err);
+      stopAttack(); // stop if error
+    };
   };
 
   const stopAttack = () => {
-    if (eventSource) {
-      eventSource.close();
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
     }
     setIsRunning(false);
-    setEventSource(null);
     setLogs([]);
     setHash('');
   };
