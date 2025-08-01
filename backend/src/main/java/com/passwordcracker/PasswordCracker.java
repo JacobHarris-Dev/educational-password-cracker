@@ -94,7 +94,7 @@ public class PasswordCracker {
                 System.out.println("Attacking... ");
 
                 //System.out.println("------Hash Choice: " + hashChoice);
-                //BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice); // Edit charset to change selection
+                BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice); // Edit charset to change selection
 
             } else if (attackChoice.equals("2")) {
 
@@ -136,7 +136,7 @@ public class PasswordCracker {
                 // Add dictionary attack logic here
                 DictionaryAttack.attack(hashedPass, hashChoice);
                 if (!DictionaryAttack.getFound()) {
-                    //BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice);
+                    BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice);
                 }
             
             } else if (attackChoice.equals("5")) {
