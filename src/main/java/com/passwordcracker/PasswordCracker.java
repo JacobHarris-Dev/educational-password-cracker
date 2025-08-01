@@ -13,10 +13,10 @@ public class PasswordCracker {
     private static String hashChoice;
     private static boolean run;
     private static String hashedPass;
-   
+
     public static String promptHash(String choice) {
 
-        
+
         String hashedPass = "";
 
         while (true) {
@@ -34,27 +34,27 @@ public class PasswordCracker {
             switch (hashChoice) {
                 case "1":
                     hashedPass = Hasher.hashPassword(choice);
-                    System.out.println("Generated Basic Hashed Password: " + hashedPass);
+                    System.out.println("\nGenerated Basic Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "2":
                     Hasher.generateSalt();
                     hashedPass = Hasher.saltHashPassword(choice);
-                    System.out.println("Generated Salted Hashed Password: " + hashedPass);
+                    System.out.println("\nGenerated Salted Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "3":
                     hashedPass = Hasher.pepperHashPassword(choice);
-                    System.out.println("Generated Peppered Hashed Password: " + hashedPass);
+                    System.out.println("\nGenerated Peppered Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "4":
                     Hasher.generateSalt();
                     hashedPass = Hasher.saltedPepperHashPass(choice);
-                    System.out.println("Generated Salted Peppered Hashed Password: " + hashedPass);
+                    System.out.println("\nGenerated Salted Peppered Hashed Password: " + hashedPass);
                     return hashedPass;
                 case "exit":
-                    System.out.println("Returning to attack selection...");
+                    System.out.println("\nReturning to attack selection...");
                     return null;
                 default:
-                    System.out.println("Command not recognized, try again.");
+                    System.out.println("\nCommand not recognized, try again.");
             }
         }
     }
@@ -69,9 +69,12 @@ public class PasswordCracker {
 
         scan = new Scanner(System.in);
         while (run) {
-            System.out.println("\nChoose attack type (1, 2, or exit): ");
+            System.out.println("\nChoose attack type (1, 2, 3, 4, or exit): ");
+            System.out.println("\nChoose attack type (1, 2, 3, 4, 5, or exit): ");
             System.out.println("1: Brute-Force Attack\n2: Dictionary Attack");
-            System.out.println("3: Dictionary + Brute Force Attack");
+            System.out.println("3: Rainbow Table Attack (Not salt friendly)");
+            System.out.println("4: Dictionary + Brute Force Attack");
+            System.out.println("5: Phishing demonstration");
             System.out.println("exit: Stop program\n");
             System.out.print("Enter attack type: ");
 
@@ -107,8 +110,21 @@ public class PasswordCracker {
 
                 // Add dictionary attack logic here
                 DictionaryAttack.attack(hashedPass, hashChoice);
-
             } else if (attackChoice.equals("3")) {
+                   System.out.print("\n--- Rainbow Table Attack ---\nEnter password to crack: ");
+                passToCrack = scan.nextLine();
+                System.out.println("You entered: " + passToCrack);
+
+                hashedPass = promptHash(passToCrack);
+                if (hashedPass == null) {
+                    continue;
+                }
+
+                // Add dictionary attack logic here
+                RainbowTableAttack.attack(hashedPass, hashChoice);
+
+
+            } else if (attackChoice.equals("4")) {
              System.out.print("\n--- Dictionary+BF Attack ---\nEnter password to crack: ");
                 passToCrack = scan.nextLine();
                 System.out.println("You entered: " + passToCrack);
@@ -123,10 +139,20 @@ public class PasswordCracker {
                 if (!DictionaryAttack.getFound()) {
                     BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice);
                 }
-            
+
+            } else if (attackChoice.equals("5")) {
+                System.out.print("\n--- Phishing Demo ---\nEnter password to crack: ");
+                passToCrack = scan.nextLine();
+                System.out.println("You entered: " + passToCrack);
+                System.out.println("Because we are trying to find pass directly, password will not be hashed.");
+                
+                
+                // Add dictionary attack logic here
+                PhishingAttack.attack(passToCrack);
+
             } else if (attackChoice.equals("exit")) {
                 System.out.println("\nExiting...");
-               
+
                 break;
             } else {
                 System.out.println("Option not recognized, try again.");
@@ -137,5 +163,5 @@ public class PasswordCracker {
 
     }
 
-    
+
 }
