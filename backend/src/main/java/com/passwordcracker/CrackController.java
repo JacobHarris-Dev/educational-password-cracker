@@ -32,7 +32,6 @@ public class CrackController {
 
         new Thread(() -> {
             try {
-                System.out.println("Starting attack");
                 BruteForceAttack.attack(length, hash, hashType, message -> {
                     try {
                         emitter.send(SseEmitter.event().data(message));
@@ -40,7 +39,6 @@ public class CrackController {
                         emitter.completeWithError(e);
                     }
                 });
-                System.out.println("Done!");
                 emitter.complete(); // done
             } catch (Exception e) {
                 emitter.completeWithError(e);
