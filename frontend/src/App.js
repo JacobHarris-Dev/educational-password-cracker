@@ -2,18 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 
 export default function App() {
-  const [status, setStatus] = useState('Loading...');
-
-  useEffect(() => {
-    fetch('http://localhost:8080/status')
-      .then(res => res.text())
-      .then(data => setStatus(data))
-      .catch(err => {
-        console.error(err);
-        setStatus('Error fetching status');
-      });
-  }, []);
-
   return (
     <div className="App">
       <header className="App-header">
@@ -21,10 +9,6 @@ export default function App() {
           with different attack types and hash combinations to learn more about each cracking
           technique!
         </h1>
-        <h3>
-          Backend status: 
-        </h3>
-         <p>{status}</p>
       </header>
 
       <div className="button-grid">
