@@ -29,8 +29,6 @@ public class BruteForceAttack {
     private static int bankNumber;
     private static boolean found;
     private static String hash;
-    private static long lastUpdateTime = 0;
-    private static volatile boolean isRunning = false;
 
     /**
      * Main attack method
@@ -41,29 +39,12 @@ public class BruteForceAttack {
      * @return
      */
     public static long attack(int length, String target, String hashType, Consumer<String> stream) {
-        if (isRunning) {
-            stream.accept("❌ Brute force is already running!");
-            return -1;
-        }
-
-        isRunning = true;
-
-        try {
         attempts = 0;
         targetPass = target;
         found = false;
         hash = hashType; // Saves to wider scope variabe
 
         stream.accept("\nStarting Brute Force Attack");
-        if (System.nanoTime() - lastUpdateTime > 2_000_000_000) {
-            System.out.println("Triggering update at attempt: " + attempts);
-            stream.accept(String.format("Bank %d Progress: %.2f%% (%d/%d)",
-                    bankNumber,
-                    (100.0 * attempts) / totalCombinations,
-                    attempts,
-                    totalCombinations));
-            lastUpdateTime = System.nanoTime();
-        }
 
         startTime = System.nanoTime(); // Start timer
 
@@ -79,15 +60,6 @@ public class BruteForceAttack {
 
             stream.accept("Searching password bank " + i + " with " + passBank[i].length + " characters");
             stream.accept("Total combinations: " + totalCombinations);
-            if (System.nanoTime() - lastUpdateTime > 2_000_000_000) {
-                System.out.println("Triggering update at attempt: " + attempts);
-                stream.accept(String.format("Bank %d Progress: %.2f%% (%d/%d)",
-                        bankNumber,
-                        (100.0 * attempts) / totalCombinations,
-                        attempts,
-                        totalCombinations));
-                lastUpdateTime = System.nanoTime();
-            }
 
             System.out.println("searching password bank " + i + " with " + passBank[i].length + " characters");
             System.out.println("Total combonations: " + totalCombinations);
@@ -101,9 +73,6 @@ public class BruteForceAttack {
         }
 
         return 0;
-    } finally {
-        isRunning = false;
-    }
 
     }
 
@@ -117,7 +86,6 @@ public class BruteForceAttack {
      */
     private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess,
             Consumer<String> stream) {
-
         if (found) {
             return;
         }
@@ -144,23 +112,15 @@ public class BruteForceAttack {
                 }
                 return;
             } else {
-                if (System.nanoTime() - lastUpdateTime > 2_000_000_000) { // 200 ms
-                    stream.accept(String.format("Bank %d Progress: %.2f%% (%d/%d)",
-                            bankNumber,
+                if (attempts % 100_000_0 == 0) {
+                    stream.accept(String.format("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)",
                             (100.0 * attempts) / totalCombinations,
-                            attempts,
-                            totalCombinations));
-
-                    if (System.nanoTime() - lastUpdateTime > 2_000_000_000) {
-                        System.out.println("Triggering update at attempt: " + attempts);
-                        stream.accept(String.format("Bank %d Progress: %.2f%% (%d/%d)",
-                                bankNumber,
-                                (100.0 * attempts) / totalCombinations,
-                                attempts,
-                                totalCombinations));
-                        lastUpdateTime = System.nanoTime();
+                            attempts, totalCombinations));
+                    try {
+                        Thread.sleep(10); // Let SSE flush updates
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
-                    lastUpdateTime = System.nanoTime();
                 }
             }
 

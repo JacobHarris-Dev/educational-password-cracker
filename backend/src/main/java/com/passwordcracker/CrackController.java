@@ -35,13 +35,7 @@ public class CrackController {
                 System.out.println("Starting attack");
                 BruteForceAttack.attack(length, hash, hashType, message -> {
                     try {
-                        System.out.println("Sending event...");
-emitter.send(SseEmitter.event().data(message));
-System.out.println("Event sent");
                         emitter.send(SseEmitter.event().data(message));
-                        System.out.println("Sending event...");
-emitter.send(SseEmitter.event().data(message));
-System.out.println("Event sent");
                     } catch (IOException e) {
                         emitter.completeWithError(e);
                     }
