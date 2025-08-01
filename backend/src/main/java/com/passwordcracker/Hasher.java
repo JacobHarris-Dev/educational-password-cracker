@@ -134,7 +134,7 @@ public class Hasher {
         // Saves salt to variable with wider scope
         uniqueSalt = generatedSalt;
 
-        System.out.println("\nYour unique salt: " + uniqueSalt);
+        System.out.println("Your unique salt: " + uniqueSalt);
 
         return generatedSalt;
     }
