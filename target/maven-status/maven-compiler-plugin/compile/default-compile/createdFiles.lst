@@ -1,5 +1,6 @@
 com\passwordcracker\Hasher.class
 com\passwordcracker\PasswordCracker.class
+com\passwordcracker\Ascii.class
 com\passwordcracker\BruteForceAttack.class
 com\passwordcracker\DictionaryAttack.class
 com\passwordcracker\Utils.class

@@ -1,1 +1,1 @@
-mvn clean compile exec:java "-Dexec.mainClass=com.passwordcracker.PasswordCracker"
+mvn clean compile exec:java '-Dexec.mainClass=com.passwordcracker.PasswordCracker'

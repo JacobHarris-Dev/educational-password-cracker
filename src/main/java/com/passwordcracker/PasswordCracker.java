@@ -20,13 +20,7 @@ public class PasswordCracker {
         String hashedPass = "";
 
         while (true) {
-            System.out.println("\nChoose level of hashing (1, 2, 3, 4, or exit): ");
-            System.out.println("1: Basic - Hash using MD5");
-            System.out.println("2: Moderate - Hash using password salting");
-            System.out.println("3: Advanced - Hash using password peppering");
-            System.out.println("4: Robust - Hash using password salting and peppering");
-            System.out.println("exit: Return to attack selection");
-            System.out.print("Enter hash level: ");
+            Ascii.generateHashPrompt();
 
             hashChoice = scan.nextLine();
 
@@ -64,19 +58,13 @@ public class PasswordCracker {
         attackChoice = "";
         run = true;
 
-        System.out.println("=== Password Cracker ===");
-        System.out.println("Version 0.1");
+
+        Ascii.generateWelcome();
+
 
         scan = new Scanner(System.in);
         while (run) {
-            System.out.println("\nChoose attack type (1, 2, 3, 4, or exit): ");
-            System.out.println("\nChoose attack type (1, 2, 3, 4, 5, or exit): ");
-            System.out.println("1: Brute-Force Attack\n2: Dictionary Attack");
-            System.out.println("3: Rainbow Table Attack (Not salt friendly)");
-            System.out.println("4: Dictionary + Brute Force Attack");
-            System.out.println("5: Phishing demonstration");
-            System.out.println("exit: Stop program\n");
-            System.out.print("Enter attack type: ");
+            Ascii.generateCrackPrompt();
 
             attackChoice = scan.nextLine();
 

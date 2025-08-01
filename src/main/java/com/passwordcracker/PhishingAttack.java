@@ -2,6 +2,9 @@ package com.passwordcracker;
 
 import java.util.Scanner;
 
+/**
+ * Produces phishing email to get fake password from user. Used to demonstrate real phishing on emails.
+ */
 public class PhishingAttack {
 
     private static Scanner scan;
@@ -14,9 +17,9 @@ public class PhishingAttack {
         printEmail();
 
         if (phishedPass.equals(userPassword)) {
-            System.out.println("\nPassword matches real password!");
+            System.out.println("\nYou just gave out your password! You failed");
         } else {
-            System.out.println("Good job not giving out your password!");
+            System.out.println("Good job not giving out your password! You passed");
         }
     }
 
@@ -26,22 +29,7 @@ public class PhishingAttack {
 
         scan = new Scanner(System.in);
 
-        System.out.println("\nSubject: Important: Unusual Sign-In Attempt Detected on Your Amazon Account");
-        System.out.println("From: Amazon Security <support@amzn-security-verification.com>");
-        System.out.println("To: your.email@example.com\n");
-
-        System.out.println("Dear Customer,");
-        System.out.println(
-                "We detected an unauthorized login attempt to your Amazon account from an unrecognized device in Russia on May 29, 2025 at 2:42 AM GMT.");
-        System.out.println(
-                "For your protection, we have temporarily locked your account until this activity is verified.");
-        System.out.println("Please confirm your identity and restore access by clicking the link below:");
-        System.out.println("http://amzn-account-restore.com/login");
-        System.out.println(
-                "If you do not verify your account within 24 hours, your Amazon account will be permanently suspended.");
-        System.out.println("Thank you for choosing Amazon.");
-        System.out.println("— Amazon Account Security Team");
-        System.out.println("© 2025 Amazon.com, Inc. All rights reserved.");
+        Ascii.generateEmail();
 
         System.out.println("\nWould you like to click on the link? y/n");
 
@@ -67,8 +55,10 @@ public class PhishingAttack {
         String password;
         scan = new Scanner(System.in);
 
-        System.out.println("Fake website:");
-        System.out.print("Please enter your password so we know its you: ");
+        Ascii.generateWebsite();
+
+        System.out.println("");
+        System.out.print("Please enter your password to sign in: ");
 
         password = scan.nextLine();
 
