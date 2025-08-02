@@ -1,5 +1,5 @@
 # Navigate to your project directory (change the path to your repo)
-cd "C:\Users\jacob\OneDrive\Desktop\Coding\Coding Projects\passwordcracker"
+cd "C:\Users\jacob\OneDrive\Desktop\Coding Projects\HTML\educational-password-cracker"
 
 # Add all changes (new, modified, deleted files)
 git add .
