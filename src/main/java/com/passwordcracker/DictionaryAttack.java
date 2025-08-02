@@ -4,11 +4,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Searches password bank to find password matches
+ */
 public class DictionaryAttack {
 
     private static String hash;
     private static boolean found;
     
+    /**
+     * Initiates dictionary attack by traversing wordlist and comparing each word to the targeted password
+     * 
+     * @param target the password attempting to be guessed
+     * @param hashType the method used to hash the password 
+     */
     public static void attack(String target, String hashType) {
 
         hash = hashType;
@@ -22,11 +31,12 @@ public class DictionaryAttack {
             System.out.println("\nStarting Dictionary attack");
             System.out.println("Searching dicitonary...");
 
-
+            // Loop that traverses through each index in wordlist and hashes it 
             while ((line = reader.readLine()) != null) {
                 String guess = line.trim();
                 String hash = hashGuess(guess);
-                if (hash.equals(target)) {
+
+                if (hash.equals(target)) { // If hashed index equals target, end loop
                     
                     System.out.println("\nPassword found: " + guess);
                     System.out.println("Attemps taken: " + attemps);
@@ -53,6 +63,8 @@ public class DictionaryAttack {
     /**
      * Determs how to hash password based off hash type, then
      * returns correctly hashed password
+     * 
+     * @param guess the password to be hashed 
      */
     private static String hashGuess(String guess) {
         String transPass = "";
@@ -70,6 +82,11 @@ public class DictionaryAttack {
         return transPass;
     }
 
+    /**
+     * Returns true if password is found
+     * 
+     * @return found boolean expressing whether password is found or not
+     */
     public static boolean getFound() {
         return found;
     }

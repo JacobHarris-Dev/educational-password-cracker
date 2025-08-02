@@ -1,8 +1,11 @@
 package com.passwordcracker;
 
+/**
+ * Guesses password by trying all combinations of multiple password banks in order of ascending length
+ */
 public class BruteForceAttack {
 
-    // Work way from top to bottom during brute force
+    // Program works from top to bottom during brute force
     private static final char[] charset0 = "1234567890".toCharArray(); // numbers
     private static final char[] charset1 = "1234567890!?@#".toCharArray(); // numbers + special characters
     private static final char[] charset2 = "abcdefghijklmnopqrstuvxyz".toCharArray(); // letters - lowercase
@@ -33,10 +36,10 @@ public class BruteForceAttack {
     /**
      * Main attack method
      * 
-     * @param length
-     * @param target
-     * @param hashType
-     * @return
+     * @param length the length of the password
+     * @param target the password tryng to be guessed
+     * @param hashType the method used to hash the password
+     * @return 0 when method ends 
      */
     public static long attack(int length, String target, String hashType) {
         attempts = 0;
@@ -54,11 +57,13 @@ public class BruteForceAttack {
 
             attempts = 0;
 
+            //  Calculates how many total password combinations can be made with the current bank
             totalCombinations = (long) Math.pow(passBank[i].length, length);
 
             System.out.println("searching password bank " + i + " with " + passBank[i].length + " characters");
             System.out.println("Total combonations: " + totalCombinations);
-            recursiveAttack(passBank[i], 0, length, new StringBuilder());
+
+            recursiveAttack(passBank[i], 0, length, new StringBuilder()); // Call to recursive attack
             if (!found) {
                 System.out.println("No matches found in password bank " + i);
                 System.out.println(" ------------ ");
@@ -73,30 +78,37 @@ public class BruteForceAttack {
     /**
      * Method for recursive password generation
      * 
-     * @param charset
-     * @param depth
-     * @param desiredLength
-     * @param currentGuess
+     * @param charset the characters the program will use to guess the password 
+     * @param depth how many characters long the guess currently is
+     * @param desiredLength how long the guess needs to be to be complete
+     * @param currentGuess the current guess the algorithim is working with 
      */
     private static void recursiveAttack(char[] charset, int depth, int desiredLength, StringBuilder currentGuess) {
         if (found) {
-            return;
+            return; // Exit method if password guessed 
         }
 
+        // Base case: if the current guess has reached the target length
         if (depth == desiredLength) {
             String guess = currentGuess.toString();
             String hashed = hashGuess(guess);
             attempts++;
 
+            // Succeed condition: check to see if hashed password equals the targeted password
             if (hashed.equals(targetPass)) {
                 long endTime = System.nanoTime();
 
                 System.out.println("\nPassword found: " + guess);
                 //System.exit(0);
                 found = true;
+
+                // Calculates and prints out time taken to guess password 
                 System.out.println("Time taken: " + (endTime - startTime) / 1_000_000_000.0  + " seconds");
                 return;
+
             } else {
+
+                // Every 1 million attempts code will update progress 
                 if (attempts % 100_000_0 == 0) {
                     System.out.printf("Bank " + bankNumber + " Progress: %.2f%% (%d/%d)\n",
                             (100.0 * attempts) / totalCombinations,
@@ -107,6 +119,7 @@ public class BruteForceAttack {
             return;
         }
 
+        // Recursive case, try each character at current depth
         for (char c : charset) {
             currentGuess.append(c);
             recursiveAttack(charset, depth + 1, desiredLength, currentGuess);
@@ -136,6 +149,11 @@ public class BruteForceAttack {
         return transPass;
     }
 
+    /**
+     * Returns true if password has been found
+     * 
+     * @return found boolean expressing if password has been found (true) or not (false)
+     */
     public static boolean getFouund() {
         return found;
     }

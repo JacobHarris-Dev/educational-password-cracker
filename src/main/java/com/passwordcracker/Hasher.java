@@ -33,8 +33,8 @@ public class Hasher {
      * converted
      * back into original string to protect password.
      * 
-     * @param password
-     * @return
+     * @param password the password to be hashed 
+     * @return hashedPassword the newly hashed password 
      */
     public static String hashPassword(String password) {
         String hashedPassword = "";
@@ -64,8 +64,8 @@ public class Hasher {
      * then hashes password. Salt is public information and not hidden.
      * Unique for each password.
      * 
-     * @param password
-     * @return
+     * @param password the password to be hashed
+     * @return saltedHashedPass the newly hashed password 
      */
     public static String saltHashPassword(String password) {
         String saltedPassword = "";
@@ -84,8 +84,8 @@ public class Hasher {
      * Same string added to all passwords, but kept
      * hidden. Password is peppered, then hashed.
      * 
-     * @param password
-     * @return saltedPepperedPass
+     * @param password the password to be hashed 
+     * @return saltedPepperedPass the newly hashed password 
      */
     public static String pepperHashPassword(String password) {
         String pepperedPassword = "";
@@ -100,6 +100,13 @@ public class Hasher {
         return pepperedHashedPass;
     }
 
+    /**
+     * Applies pepper to password, then adds salt to end.
+     * Finally, password is hashed.
+     * 
+     * @param password the password to be hashed 
+     * @return saltedPepperedHashPass the newly hashed password 
+     */
     public static String saltedPepperHashPass(String password) {
         String saltedPepperedPass = "";
         String saltedPepperedHashPass = "";
@@ -117,7 +124,7 @@ public class Hasher {
      * Creates random 16 byte array and converts
      * it to string to be added to the user's password.
      * 
-     * @return generatedSalt
+     * @return generatedSalt the string to be added to the password
      */
     public static String generateSalt() {
         String generatedSalt;

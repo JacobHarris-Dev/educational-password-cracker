@@ -18,6 +18,12 @@ public class RainbowTableAttack {
     private static String hash;
     private static boolean found;
 
+    /**
+     * Intiates attack 
+     * 
+     * @param target password attemtping to be guess
+     * @param hashType method of hashing used
+     */
     public static void attack(String target, String hashType) {
 
         hash = hashType;
@@ -32,6 +38,7 @@ public class RainbowTableAttack {
 
         System.out.println("\nAttacking...");
 
+        // Traverse through the rainbow table 
         for (String hash : rainbowTable.keySet()) {
             if (hash.equals(target)) {
                  System.out.println("Hash Found: " + hash + "\nMatching table password: " + rainbowTable.get(hash));
@@ -62,6 +69,7 @@ public class RainbowTableAttack {
 
             // rainbowTable.put(hashedPass, password)
 
+            // Hashes each index of wordlsit
             while ((line = reader.readLine()) != null) {
                 String guess = line.trim();
                 String hash = Hasher.hashPassword(guess);

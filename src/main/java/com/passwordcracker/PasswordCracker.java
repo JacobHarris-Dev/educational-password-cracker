@@ -14,6 +14,13 @@ public class PasswordCracker {
     private static boolean run;
     private static String hashedPass;
 
+    /**
+     * Prompts user to select a method to hash their password.
+     * Repeats until user selects valid choice.
+     * 
+     * @param choice the hash selected by the user 
+     * @return hashedPass the newly hashed password 
+     */
     public static String promptHash(String choice) {
 
 
@@ -53,16 +60,22 @@ public class PasswordCracker {
         }
     }
 
+    /**
+     * Main method 
+     * 
+     * @param args
+     */   
     public static void main(String[] args) {
 
         attackChoice = "";
         run = true;
 
-
+        //Prints out welcome banner 
         Ascii.generateWelcome();
 
-
         scan = new Scanner(System.in);
+
+        // Programs loops until user choose to exit 
         while (run) {
             Ascii.generateCrackPrompt();
 
@@ -96,8 +109,9 @@ public class PasswordCracker {
                     continue;
                 }
 
-                // Add dictionary attack logic here
+                // Call dicitonary attack 
                 DictionaryAttack.attack(hashedPass, hashChoice);
+
             } else if (attackChoice.equals("3")) {
                    System.out.print("\n--- Rainbow Table Attack ---\nEnter password to crack: ");
                 passToCrack = scan.nextLine();
@@ -108,10 +122,10 @@ public class PasswordCracker {
                     continue;
                 }
 
-                // Add dictionary attack logic here
+                // Call rainbow table attack 
                 RainbowTableAttack.attack(hashedPass, hashChoice);
 
-
+            
             } else if (attackChoice.equals("4")) {
              System.out.print("\n--- Dictionary+BF Attack ---\nEnter password to crack: ");
                 passToCrack = scan.nextLine();
@@ -122,12 +136,13 @@ public class PasswordCracker {
                     continue;
                 }
 
-                // Add dictionary attack logic here
+                // Call dictionary attack 
                 DictionaryAttack.attack(hashedPass, hashChoice);
                 if (!DictionaryAttack.getFound()) {
                     BruteForceAttack.attack(passToCrack.length(), hashedPass, hashChoice);
                 }
 
+            // Initiate phishing demo
             } else if (attackChoice.equals("5")) {
                 System.out.print("\n--- Phishing Demo ---\nEnter password to crack: ");
                 passToCrack = scan.nextLine();
@@ -135,7 +150,7 @@ public class PasswordCracker {
                 System.out.println("Because we are trying to find pass directly, password will not be hashed.");
                 
                 
-                // Add dictionary attack logic here
+                // Call phishing attack 
                 PhishingAttack.attack(passToCrack);
 
             } else if (attackChoice.equals("exit")) {

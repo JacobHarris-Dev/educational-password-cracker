@@ -3,13 +3,19 @@ package com.passwordcracker;
 import java.util.Scanner;
 
 /**
- * Produces phishing email to get fake password from user. Used to demonstrate real phishing on emails.
+ * Produces phishing email to get fake password from user. Used to demonstrate
+ * real phishing on emails.
  */
 public class PhishingAttack {
 
     private static Scanner scan;
     private static String phishedPass;
 
+    /**
+     * Initiates attack
+     * 
+     * @param userPassword the password entered by the user
+     */
     public static void attack(String userPassword) {
         phishedPass = "";
 
@@ -23,6 +29,9 @@ public class PhishingAttack {
         }
     }
 
+    /**
+     * Prints out fake email
+     */
     public static void printEmail() {
 
         String response;
@@ -35,6 +44,7 @@ public class PhishingAttack {
 
         response = scan.nextLine();
 
+        // Prompts user to see if they give their password up
         while (true) {
             if (response.equals("y")) {
                 generateWebsite();
@@ -50,6 +60,9 @@ public class PhishingAttack {
 
     }
 
+    /**
+     * Generates Fake Website
+     */
     public static void generateWebsite() {
 
         String password;

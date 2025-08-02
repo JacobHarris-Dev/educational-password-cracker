@@ -1,7 +1,13 @@
 package com.passwordcracker;
 
+/**
+ * Used to generate ASCII images
+ */
 public class Ascii {
 
+        /**
+         * Prints welcome banner seen at start of code
+         */
         public static void generateWelcome() {
                 System.out.println(
                                 " _____    _                 _   _                   _  ______                                   _   _____                _              ");
@@ -23,6 +29,9 @@ public class Ascii {
                 System.out.println("-By Jacob Harris");
         }
 
+         /**
+         * Prints hash selection box
+         */
         public static void generateHashPrompt() {
                 System.out.println();
                 System.out.println("+-------------------------------------------------------------+");
@@ -38,6 +47,9 @@ public class Ascii {
                 System.out.print("Enter hash level: ");
         }
 
+        /**
+         * Prints attack selection box
+         */
         public static void generateCrackPrompt() {
                 System.out.println();
                 System.out.println("+-------------------------------------------------------------+");
@@ -54,6 +66,9 @@ public class Ascii {
                 System.out.print("Enter attack type: ");
         }
 
+        /**
+         * Prints demo email used in phishing class 
+         */
         public static void generateEmail() {
                 System.out.println();
                 System.out.println("+---------------------------------------------------------------------+");
@@ -82,6 +97,9 @@ public class Ascii {
                 System.out.println("© 2025 Amazon.com, Inc. All rights reserved.");
         }
 
+        /**
+         * Prints fake website used for phishing demo
+         */
         public static void generateWebsite() {
                 System.out.println();
                 System.out.println("************************************************************");
