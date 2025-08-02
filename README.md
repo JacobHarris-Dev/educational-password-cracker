@@ -1,4 +1,4 @@
-# education-password-cracker
+# educational-password-cracker
 A simple password cracker used for educational purposes that utilizes different password cracking methods to teach users about how passwords are cracked and promote password security 
 
 ---
