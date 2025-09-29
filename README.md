@@ -65,8 +65,11 @@ To run the program, use the command **.\run.ps1** in the terminal. This script c
 
 ## Learning Objectives 
 -Understand brute-force attack principles
+
 -Learn how hash functions work and how they're used
+
 -Practice clean, modular Java programming
+
 -Develop awareness of ethical hacking boundaries
 
 ---
